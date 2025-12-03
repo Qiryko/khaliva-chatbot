@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>KHALIVA – Chatbot Floating dengan Welcome Popup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f5f6fa;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Tombol Avatar KHALIVA */
+    .chat-avatar-button {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      z-index: 9999;
+      transition: 0.25s;
+      border: 3px solid #ffffff;
+      background-color: #0f9fae; /* fallback warna */
+    }
+
+    .chat-avatar-button:hover {
+      transform: scale(1.1);
+    }
+
+    /* Jendela Chat */
+    .chat-window {
+      position: fixed;
+      bottom: 110px;
+      right: 25px;
+      width: 360px;
+      height: 480px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+      overflow: hidden;
+      display: none;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Tombol Close di dalam chat window */
+    .close-btn {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      font-size: 18px;
+      background: #ffffffdd;
+      padding: 3px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      z-index: 10;
+    }
+
+    /* Popup Welcome */
+    .welcome-popup {
+      position: fixed;
+      bottom: 115px;
+      right: 110px;
+      max-width: 260px;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+      font-size: 13px;
+      color: #333;
+      z-index: 9998;
+      display: none;
+    }
+
+    .welcome-popup strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #0f9fae;
+    }
+
+    .welcome-popup::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      right: 18px;
+      border-width: 10px 10px 0 10px;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+    }
+
+    .welcome-close {
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      color: #777;
+    }
+
+    @media (max-width: 480px) {
+      .chat-window {
+        width: 95%;
+        right: 2.5%;
+      }
+      .welcome-popup {
+        right: 90px;
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Popup Welcome -->
+  <div class="welcome-popup" id="welcomePopup">
+    <button class="welcome-close" onclick="hideWelcomePopup()">×</button>
+    <strong>Assalamu’alaikum, saya KHALIVA 👋</strong>
+    Butuh bantuan layanan perpustakaan? Klik avatar di pojok kanan bawah ya. 😊
+  </div>
+
+  <!-- Tombol Avatar KHALIVA -->
+  <div class="chat-avatar-button" onclick="toggleChat()"
+       style="background-image: url('khaliva-avatar.png');">
+    <!-- Ganti 'khaliva-avatar.png' dengan path/logo KHALIVA di server Bapak -->
+  </div>
+
+  <!-- Jendela Chatbot -->
+  <div class="chat-window" id="chatWindow">
+    <div class="close-btn" onclick="toggleChat()">×</div>
+    <iframe
+      src="https://console.dialogflow.com/api-client/demo/embedded/9a596193-1dec-43e8-98db-b84e07cfd5b5"
+      allow="microphone;">
+    </iframe>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById("chatWindow");
+    const welcomePopup = document.getElementById("welcomePopup");
+
+    function toggleChat() {
+      const isOpen = chatWindow.style.display === "block";
+      chatWindow.style.display = isOpen ? "none" : "block";
+      hideWelcomePopup();
+    }
+
+    function hideWelcomePopup() {
+      if (welcomePopup) {
+        welcomePopup.style.display = "none";
+      }
+    }
+
+    // Tampilkan popup welcome beberapa detik setelah halaman dimuat
+    window.addEventListener("load", function () {
+      // Tampilkan setelah 1 detik
+      setTimeout(function () {
+        if (welcomePopup) {
+          welcomePopup.style.display = "block";
+        }
+      }, 1000);
+
+      // Sembunyikan otomatis setelah 8 detik
+      setTimeout(function () {
+        hideWelcomePopup();
+      }, 9000);
+    });
+  </script>
+
+</body>
+</html>
